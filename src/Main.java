@@ -21,7 +21,22 @@ public class Main {
         }
     }
 
-    public static void performSemaphoreOperation() {}
+    public static void performSemaphoreOperation() {
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.print("Введіть кількість потоків (n): ");
+        int n = scanner.nextInt();
+        System.out.print("Введіть інтервал часу t1: ");
+        int t1 = scanner.nextInt();
+        System.out.print("Введіть інтервал часу t2 (t2 > t1): ");
+        int t2 = scanner.nextInt();
+
+        for (int i = 0; i < n; i++) {
+            String threadName = "Thread-" + (i + 1);
+            Thread thread = new Thread(new SemaphoreThread(threadName, t1, t2));
+            thread.start();
+        }
+    }
 
     public static void performAtomicOperation() {}
 
