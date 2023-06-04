@@ -1,4 +1,5 @@
 import java.util.Scanner;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class Main {
 
@@ -38,7 +39,65 @@ public class Main {
         }
     }
 
-    public static void performAtomicOperation() {}
+    private static AtomicInteger globalVariable = new AtomicInteger(0);
+
+    public static void performAtomicOperation() {
+        Scanner scanner = new Scanner(System.in);
+
+        while (true) {
+            System.out.println("Підпункти меню 'Atomic':");
+            System.out.println("1 - Збільшити глобальну змінну");
+            System.out.println("2 - Зменшити глобальну змінну");
+            System.out.println("3 - Змінити глобальну змінну");
+            System.out.println("0 - Повернутися до попереднього меню");
+
+            System.out.print("Введіть номер підпункту: ");
+            int choice = scanner.nextInt();
+
+            switch (choice) {
+                case 1 -> incrementGlobalVariable();
+                case 2 -> decrementGlobalVariable();
+                case 3 -> {
+                    System.out.print("Введіть нове значення глобальної змінної: ");
+                    int newValue = scanner.nextInt();
+                    setGlobalVariable(newValue);
+                }
+                case 0 -> {
+                    return;
+                }
+                default -> System.out.println("Невірний вибір. Спробуйте ще раз.");
+            }
+        }
+    }
+
+    public static void incrementGlobalVariable() {
+        int oldValue = globalVariable.get();
+        int newValue = oldValue + 1;
+        boolean success = globalVariable.compareAndSet(oldValue, newValue);
+
+        if (success) {
+            System.out.println("Глобальна змінна збільшена. Поточне значення: " + newValue);
+        } else {
+            System.out.println("Не вдалося збільшити глобальну змінну. Поточне значення: " + globalVariable.get());
+        }
+    }
+
+    public static void decrementGlobalVariable() {
+        int oldValue = globalVariable.get();
+        int newValue = oldValue - 1;
+        boolean success = globalVariable.compareAndSet(oldValue, newValue);
+
+        if (success) {
+            System.out.println("Глобальна змінна зменшена. Поточне значення: " + newValue);
+        } else {
+            System.out.println("Не вдалося зменшити глобальну змінну. Поточне значення: " + globalVariable.get());
+        }
+    }
+
+    public static void setGlobalVariable(int newValue) {
+        globalVariable.set(newValue);
+        System.out.println("Глобальна змінна змінена. Нове значення: " + newValue);
+    }
 
     public static void performThreadOperation() {}
 
