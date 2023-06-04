@@ -1,5 +1,7 @@
 import java.util.Scanner;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class Main {
 
@@ -99,7 +101,35 @@ public class Main {
         System.out.println("Глобальна змінна змінена. Нове значення: " + newValue);
     }
 
-    public static void performThreadOperation() {}
+    public static void performThreadOperation() {
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.print("Виберіть тип потоків (1 - Pull-Thread, 2 - Cash-Thread): ");
+        int threadType = scanner.nextInt();
+
+        System.out.print("Введіть кількість потоків в пулі/кеші (k): ");
+        int k = scanner.nextInt();
+
+        System.out.print("Введіть кількість потоків, що виконуються (n): ");
+        int n = scanner.nextInt();
+
+        ExecutorService executorService;
+
+        if (threadType == 1) {
+            executorService = Executors.newFixedThreadPool(k);
+        } else if (threadType == 2) {
+            executorService = Executors.newCachedThreadPool();
+        } else {
+            System.out.println("Невірний вибір типу потоків. Повернення до попереднього меню.");
+            return;
+        }
+
+        for (int i = 0; i < n; i++) {
+            executorService.execute(new ThreadRunnable());
+        }
+
+        executorService.shutdown();
+    }
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
